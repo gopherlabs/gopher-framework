@@ -1,15 +1,18 @@
 package framework
 
-import "net/http"
+import (
+	"net/http"
+)
 
-var sampleFac = new(SampleFacade)
-
-func (c Container) NewSample() Samplable {
-	return sampleFac.NewSample()
-}
+//var sampleFac = new(SampleFacade)
 
 type SampleFacade struct {
-	name string
+	name     string
+	provider Samplable
+}
+
+func (c Container) NewSample() Samplable {
+	return new(SampleFacade).NewSample()
 }
 
 func (p *SampleFacade) Register(config map[string]interface{}) interface{} {
@@ -21,7 +24,9 @@ func (p *SampleFacade) GetKey() string {
 }
 
 func (p *SampleFacade) NewSample() Samplable {
-	return new(SampleFacade)
+	p = new(SampleFacade)
+	p.provider = c.providers[SAMPLE].(Samplable).NewSample()
+	return p
 }
 
 func (p *SampleFacade) GetName() string {
@@ -30,12 +35,12 @@ func (p *SampleFacade) GetName() string {
 	//	if p.container.NewLog() != nil {
 	//		p.container.NewLog().Info("=================== BEFORE GetName()")
 	//	}
-
-	return ">" + p.name
+	name := p.provider.GetName()
+	return name
 }
 
 func (p *SampleFacade) SetName(name string) {
-	p.name = name
+	p.provider.SetName("facade added: " + name)
 }
 
 // Logger
