@@ -45,7 +45,7 @@ func showLoadingHeader() {
 	c.providers[LOGGER].(Loggable).Info(`|----------------------------------------|`)
 }
 
-func (container *Container) ShowBanner() {
+func (container *Container) showBanner() {
 	log := container.providers[LOGGER].(Loggable).NewLog()
 	log.Info(`|----------------------------------------|`)
 	log.Info(`|    _____								`)

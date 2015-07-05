@@ -4,8 +4,7 @@ import (
 	"net/http"
 )
 
-//var sampleFac = new(SampleFacade)
-
+// Sample facade
 type SampleFacade struct {
 	name     string
 	provider Samplable
@@ -20,7 +19,7 @@ func (p *SampleFacade) Register(config map[string]interface{}) interface{} {
 }
 
 func (p *SampleFacade) GetKey() string {
-	return "SAMPLE"
+	return p.provider.GetKey()
 }
 
 func (p *SampleFacade) NewSample() Samplable {
@@ -30,12 +29,9 @@ func (p *SampleFacade) NewSample() Samplable {
 }
 
 func (p *SampleFacade) GetName() string {
-	//p.log.Info()
-
-	//	if p.container.NewLog() != nil {
-	//		p.container.NewLog().Info("=================== BEFORE GetName()")
-	//	}
+	//c.providers[LOGGER].(Loggable).Info("=================== BEFORE GetName()")
 	name := p.provider.GetName()
+	//c.providers[LOGGER].(Loggable).Info("=================== AFTER GetName()")
 	return name
 }
 
@@ -43,14 +39,98 @@ func (p *SampleFacade) SetName(name string) {
 	p.provider.SetName("facade added: " + name)
 }
 
+// Router Facade
+type RouteFacade struct {
+	http.Handler
+	provider Routable
+}
+
+func (c Container) NewRouter() Routable {
+	return new(RouteFacade).NewRouter()
+}
+
+func (r *RouteFacade) Register(config map[string]interface{}) interface{} {
+	return r
+}
+
+func (r *RouteFacade) GetKey() string {
+	return r.provider.GetKey()
+}
+
+func (r *RouteFacade) NewRouter() Routable {
+	r = new(RouteFacade)
+	r.provider = c.providers[ROUTER].(Routable).NewRouter()
+	return r
+}
+
+func (r *RouteFacade) Get(path string, fn func(http.ResponseWriter, *http.Request)) {
+	nfn := func(rw http.ResponseWriter, req *http.Request) {
+		routeMiddleware(c, rw, req, fn)
+	}
+	r.provider.Get(path, nfn)
+}
+
+func (r *RouteFacade) Head(path string, fn func(http.ResponseWriter, *http.Request)) {
+	nfn := func(rw http.ResponseWriter, req *http.Request) {
+		routeMiddleware(c, rw, req, fn)
+	}
+	r.provider.Head(path, nfn)
+}
+
+func (r *RouteFacade) Post(path string, fn func(http.ResponseWriter, *http.Request)) {
+	nfn := func(rw http.ResponseWriter, req *http.Request) {
+		routeMiddleware(c, rw, req, fn)
+	}
+	r.provider.Post(path, nfn)
+}
+
+func (r *RouteFacade) Put(path string, fn func(http.ResponseWriter, *http.Request)) {
+	nfn := func(rw http.ResponseWriter, req *http.Request) {
+		routeMiddleware(c, rw, req, fn)
+	}
+	r.provider.Put(path, nfn)
+}
+
+func (r *RouteFacade) Patch(path string, fn func(http.ResponseWriter, *http.Request)) {
+	r.provider.Patch(path, fn)
+}
+
+func (r *RouteFacade) Delete(path string, fn func(http.ResponseWriter, *http.Request)) {
+	nfn := func(rw http.ResponseWriter, req *http.Request) {
+		routeMiddleware(c, rw, req, fn)
+	}
+	r.provider.Delete(path, nfn)
+}
+
+func (r *RouteFacade) Options(path string, fn func(http.ResponseWriter, *http.Request)) {
+	nfn := func(rw http.ResponseWriter, req *http.Request) {
+		routeMiddleware(c, rw, req, fn)
+	}
+	r.provider.Options(path, nfn)
+}
+
+func (r *RouteFacade) Match(path string, fn func(http.ResponseWriter, *http.Request), verbs ...string) {
+	nfn := func(rw http.ResponseWriter, req *http.Request) {
+		routeMiddleware(c, rw, req, fn)
+	}
+	r.provider.Match(path, nfn, verbs...)
+}
+
+func (r *RouteFacade) All(path string, fn func(http.ResponseWriter, *http.Request)) {
+	nfn := func(rw http.ResponseWriter, req *http.Request) {
+		routeMiddleware(c, rw, req, fn)
+	}
+	r.provider.All(path, nfn)
+}
+
+func (r *RouteFacade) Serve() {
+	c.showBanner()
+	r.provider.Serve()
+}
+
 // Logger
 func (c Container) NewLog() Loggable {
 	return c.providers[LOGGER].(Loggable).NewLog()
-}
-
-// Router
-func (c Container) NewRouter() Routable {
-	return c.providers[ROUTER].(Routable).NewRouter()
 }
 
 // Parameters
