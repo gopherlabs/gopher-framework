@@ -148,27 +148,6 @@ func (c Container) View(rw http.ResponseWriter, status int, name string, binding
 	c.providers[RENDERER].(Renderable).View(rw, status, name, binding)
 }
 
-//func (s *sampleFacade) NewSample() Samplable {
-//	return container.providers[SAMPLE].(Samplable).NewSample()
-//}
-
-//func (s *sampleFacade) GetName() string {
-//	return sampleFac.GetName()
-//}
-
-//func (s sampleFacade) SetName(name string) {
-//	sampleFac.self.SetName(name)
-//}
-
-/*
-func (s sampleFacade) Register(config map[string]interface{}) interface{} {
-	return s
-}
-
-func (s sampleFacade) GetKey() string {
-	return "SAMPLE"
-}
-*/
 /*
 type routerFacade struct {
 	http.Handler
