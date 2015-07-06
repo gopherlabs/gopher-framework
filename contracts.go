@@ -45,7 +45,7 @@ type Routable interface {
 	Options(path string, fn func(http.ResponseWriter, *http.Request))
 	Match(path string, fn func(http.ResponseWriter, *http.Request), verbs ...string)
 	All(path string, fn func(http.ResponseWriter, *http.Request))
-	//NotFound(fn func(http.ResponseWriter, *http.Request))
+	NotFound(fn func(http.ResponseWriter, *http.Request))
 	Serve()
 }
 

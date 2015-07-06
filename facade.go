@@ -127,6 +127,13 @@ func (r *RouteFacade) All(path string, fn func(http.ResponseWriter, *http.Reques
 	r.provider.All(path, nfn)
 }
 
+func (r *RouteFacade) NotFound(fn func(http.ResponseWriter, *http.Request)) {
+	nfn := func(rw http.ResponseWriter, req *http.Request) {
+		routeMiddleware(c, rw, req, fn)
+	}
+	r.provider.NotFound(nfn)
+}
+
 func (r *RouteFacade) Serve() {
 	c.showBanner()
 	r.provider.Serve()
