@@ -29,9 +29,7 @@ func (p *SampleFacade) NewSample() Samplable {
 }
 
 func (p *SampleFacade) GetName() string {
-	//c.providers[LOGGER].(Loggable).Info("=================== BEFORE GetName()")
 	name := p.provider.GetName()
-	//c.providers[LOGGER].(Loggable).Info("=================== AFTER GetName()")
 	return name
 }
 
@@ -61,6 +59,12 @@ func (r *RouteFacade) NewRouter() Routable {
 	r = new(RouteFacade)
 	r.provider = c.providers[ROUTER].(Routable).NewRouter()
 	return r
+}
+
+func (r *RouteFacade) SubRouter() Routable {
+	sub := new(RouteFacade)
+	sub.provider = c.providers[ROUTER].(Routable).SubRouter()
+	return sub
 }
 
 func (r *RouteFacade) Get(path string, fn func(http.ResponseWriter, *http.Request)) {
