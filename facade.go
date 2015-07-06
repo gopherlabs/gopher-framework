@@ -1,10 +1,12 @@
 package framework
 
 import (
+	"fmt"
 	"net/http"
 )
 
 // Sample facade
+/*
 type SampleFacade struct {
 	name     string
 	provider Samplable
@@ -36,11 +38,13 @@ func (p *SampleFacade) GetName() string {
 func (p *SampleFacade) SetName(name string) {
 	p.provider.SetName("facade added: " + name)
 }
+*/
 
 // Router Facade
 type RouteFacade struct {
 	http.Handler
-	provider Routable
+	provider    Routable
+	middlewares []Middlewarable
 }
 
 func (c Container) NewRouter() Routable {
@@ -57,18 +61,25 @@ func (r *RouteFacade) GetKey() string {
 
 func (r *RouteFacade) NewRouter() Routable {
 	r = new(RouteFacade)
+	r.middlewares = []Middlewarable{}
 	r.provider = c.providers[ROUTER].(Routable).NewRouter()
 	return r
 }
 
 func (r *RouteFacade) SubRouter() Routable {
 	sub := new(RouteFacade)
+	sub.middlewares = []Middlewarable{}
 	sub.provider = c.providers[ROUTER].(Routable).SubRouter()
 	return sub
 }
 
 func (r *RouteFacade) Get(path string, fn func(http.ResponseWriter, *http.Request)) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
+		for _, middleware := range r.middlewares {
+			middleware.Handle(func() {
+				fmt.Println("This functiion was called")
+			}, rw, req)
+		}
 		routeMiddleware(c, rw, req, fn)
 	}
 	r.provider.Get(path, nfn)
@@ -137,6 +148,11 @@ func (r *RouteFacade) NotFound(fn func(http.ResponseWriter, *http.Request)) {
 func (r *RouteFacade) Serve() {
 	c.showBanner()
 	r.provider.Serve()
+}
+
+// Middleware
+func (r *RouteFacade) Use(mw Middlewarable) {
+	r.middlewares = append(r.middlewares, mw)
 }
 
 // Logger
