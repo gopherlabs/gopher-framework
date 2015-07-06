@@ -35,6 +35,7 @@ type Routable interface {
 	Providerable
 	http.Handler
 	NewRouter() Routable
+	SubRouter() Routable
 	Get(path string, fn func(http.ResponseWriter, *http.Request))
 	Head(path string, fn func(http.ResponseWriter, *http.Request))
 	Post(path string, fn func(http.ResponseWriter, *http.Request))
@@ -44,6 +45,7 @@ type Routable interface {
 	Options(path string, fn func(http.ResponseWriter, *http.Request))
 	Match(path string, fn func(http.ResponseWriter, *http.Request), verbs ...string)
 	All(path string, fn func(http.ResponseWriter, *http.Request))
+	//NotFound(fn func(http.ResponseWriter, *http.Request))
 	Serve()
 }
 
