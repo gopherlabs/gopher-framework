@@ -1,9 +1,6 @@
 package framework
 
-import (
-	"fmt"
-	"net/http"
-)
+import "net/http"
 
 // Sample facade
 /*
@@ -61,12 +58,14 @@ func (r *RouteFacade) GetKey() string {
 
 func (r *RouteFacade) NewRouter() Routable {
 	r = new(RouteFacade)
+	r.Use(routeLoggerMiddleware)
 	r.provider = c.providers[ROUTER].(Routable).NewRouter()
 	return r
 }
 
 func (r *RouteFacade) SubRouter() Routable {
 	sub := new(RouteFacade)
+	sub.Use(routeLoggerMiddleware)
 	sub.provider = c.providers[ROUTER].(Routable).SubRouter()
 	return sub
 }
@@ -76,14 +75,13 @@ func (r *RouteFacade) Get(path string, fn func(http.ResponseWriter, *http.Reques
 		for _, middleware := range r.middlewares {
 			next := false
 			middleware(rw, req, func() { next = true })
-			fmt.Printf("The value of next is %v", next)
 			if next {
 				continue
 			} else {
 				break
 			}
 		}
-		routeMiddleware(c, rw, req, fn)
+		fn(rw, req)
 	}
 	r.provider.Get(path, nfn)
 }
