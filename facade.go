@@ -58,6 +58,7 @@ func (r *RouteFacade) GetKey() string {
 
 func (r *RouteFacade) NewRouter() Routable {
 	r = new(RouteFacade)
+	r.middlewares = c.middlewares
 	r.Use(routeLoggerMiddleware)
 	r.provider = c.providers[ROUTER].(Routable).NewRouter()
 	return r

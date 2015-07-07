@@ -13,8 +13,9 @@ var c *Container
 type Config map[string]map[string]interface{}
 
 type Container struct {
-	config    Config
-	providers map[string]Providerable
+	config      Config
+	providers   map[string]Providerable
+	middlewares []Middleware
 }
 
 func NewContainer(config ...Config) *Container {
@@ -37,6 +38,12 @@ func (container *Container) RegisterProvider(provider interface{}) {
 		showLoadingHeader()
 	}
 	container.providers[LOGGER].(Loggable).Info("| * " + key + " ✓")
+}
+
+// Middleware
+func (container *Container) Use(mw MiddlewareHandler, args ...interface{}) {
+	middleware := Middleware{handler: mw, args: args}
+	container.middlewares = append(container.middlewares, middleware)
 }
 
 func showLoadingHeader() {
