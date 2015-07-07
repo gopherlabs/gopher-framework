@@ -74,9 +74,14 @@ func (r *RouteFacade) SubRouter() Routable {
 func (r *RouteFacade) Get(path string, fn func(http.ResponseWriter, *http.Request)) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
 		for _, middleware := range r.middlewares {
-			middleware(rw, req, func() {
-				fmt.Println("This middleware functiion was called")
-			})
+			next := false
+			middleware(rw, req, func() { next = true })
+			fmt.Printf("The value of next is %v", next)
+			if next {
+				continue
+			} else {
+				break
+			}
 		}
 		routeMiddleware(c, rw, req, fn)
 	}
