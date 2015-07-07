@@ -119,9 +119,9 @@ func (r *RouteFacade) Options(path string, fn func(http.ResponseWriter, *http.Re
 	r.provider.Options(path, nfn)
 }
 
-func (r *RouteFacade) Match(path string, fn func(http.ResponseWriter, *http.Request), verbs []string) {
+func (r *RouteFacade) Match(path string, fn func(http.ResponseWriter, *http.Request), verbs []string, mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
-		processMiddlewares(r.middlewares, rw, req, fn)
+		processMiddlewares(r.middlewares, rw, req, fn, mw...)
 	}
 	r.provider.Match(path, nfn, verbs)
 }
