@@ -41,7 +41,7 @@ func (p *SampleFacade) SetName(name string) {
 type RouteFacade struct {
 	http.Handler
 	provider    Routable
-	middlewares []func(rw http.ResponseWriter, req *http.Request, next func())
+	middlewares []Middleware
 }
 
 func (c Container) NewRouter() Routable {
@@ -65,16 +65,16 @@ func (r *RouteFacade) NewRouter() Routable {
 
 func (r *RouteFacade) SubRouter() Routable {
 	sub := new(RouteFacade)
-	sub.Use(routeLoggerMiddleware)
+	sub.middlewares = r.middlewares
 	sub.provider = c.providers[ROUTER].(Routable).SubRouter()
 	return sub
 }
 
-func (r *RouteFacade) Get(path string, fn func(http.ResponseWriter, *http.Request)) {
+func (r *RouteFacade) Get(path string, fn func(rw http.ResponseWriter, req *http.Request)) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
 		for _, middleware := range r.middlewares {
 			next := false
-			middleware(rw, req, func() { next = true })
+			middleware.handler(rw, req, func() { next = true }, middleware.args...)
 			if next {
 				continue
 			} else {
@@ -152,8 +152,9 @@ func (r *RouteFacade) Serve() {
 }
 
 // Middleware
-func (r *RouteFacade) Use(mw func(rw http.ResponseWriter, req *http.Request, next func())) {
-	r.middlewares = append(r.middlewares, mw)
+func (r *RouteFacade) Use(mw MiddlewareHandler, args ...interface{}) {
+	middleware := Middleware{handler: mw, args: args}
+	r.middlewares = append(r.middlewares, middleware)
 }
 
 // Logger

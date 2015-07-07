@@ -47,7 +47,7 @@ type Routable interface {
 	All(path string, fn func(http.ResponseWriter, *http.Request))
 	NotFound(fn func(http.ResponseWriter, *http.Request))
 	Serve()
-	Use(func(rw http.ResponseWriter, req *http.Request, next func()))
+	Use(fn MiddlewareHandler, args ...interface{})
 }
 
 /*
