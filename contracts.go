@@ -44,7 +44,7 @@ type Routable interface {
 	Delete(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
 	Options(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
 	//TODO: Refactor Match() to accept route middlewares
-	Match(path string, fn func(http.ResponseWriter, *http.Request), verbs ...string)
+	Match(path string, fn func(http.ResponseWriter, *http.Request), verbs []string)
 	All(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
 	NotFound(fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
 	Serve()
