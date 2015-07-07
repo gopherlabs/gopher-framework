@@ -9,10 +9,6 @@ type Providerable interface {
 	GetKey() string
 }
 
-type Middlewarable interface {
-	Handle(fn func(), rw http.ResponseWriter, req *http.Request)
-}
-
 type Loggable interface {
 	Providerable
 	NewLog() Loggable
@@ -51,7 +47,7 @@ type Routable interface {
 	All(path string, fn func(http.ResponseWriter, *http.Request))
 	NotFound(fn func(http.ResponseWriter, *http.Request))
 	Serve()
-	Use(mw Middlewarable)
+	Use(func(rw http.ResponseWriter, req *http.Request, next func()))
 }
 
 /*

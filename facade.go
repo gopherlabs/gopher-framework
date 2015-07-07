@@ -44,7 +44,7 @@ func (p *SampleFacade) SetName(name string) {
 type RouteFacade struct {
 	http.Handler
 	provider    Routable
-	middlewares []Middlewarable
+	middlewares []func(rw http.ResponseWriter, req *http.Request, next func())
 }
 
 func (c Container) NewRouter() Routable {
@@ -61,14 +61,12 @@ func (r *RouteFacade) GetKey() string {
 
 func (r *RouteFacade) NewRouter() Routable {
 	r = new(RouteFacade)
-	r.middlewares = []Middlewarable{}
 	r.provider = c.providers[ROUTER].(Routable).NewRouter()
 	return r
 }
 
 func (r *RouteFacade) SubRouter() Routable {
 	sub := new(RouteFacade)
-	sub.middlewares = []Middlewarable{}
 	sub.provider = c.providers[ROUTER].(Routable).SubRouter()
 	return sub
 }
@@ -76,9 +74,9 @@ func (r *RouteFacade) SubRouter() Routable {
 func (r *RouteFacade) Get(path string, fn func(http.ResponseWriter, *http.Request)) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
 		for _, middleware := range r.middlewares {
-			middleware.Handle(func() {
-				fmt.Println("This functiion was called")
-			}, rw, req)
+			middleware(rw, req, func() {
+				fmt.Println("This middleware functiion was called")
+			})
 		}
 		routeMiddleware(c, rw, req, fn)
 	}
@@ -151,7 +149,7 @@ func (r *RouteFacade) Serve() {
 }
 
 // Middleware
-func (r *RouteFacade) Use(mw Middlewarable) {
+func (r *RouteFacade) Use(mw func(rw http.ResponseWriter, req *http.Request, next func())) {
 	r.middlewares = append(r.middlewares, mw)
 }
 
