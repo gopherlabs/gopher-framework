@@ -36,16 +36,17 @@ type Routable interface {
 	http.Handler
 	NewRouter() Routable
 	SubRouter() Routable
-	Get(path string, fn func(http.ResponseWriter, *http.Request))
-	Head(path string, fn func(http.ResponseWriter, *http.Request))
-	Post(path string, fn func(http.ResponseWriter, *http.Request))
-	Put(path string, fn func(http.ResponseWriter, *http.Request))
-	Patch(path string, fn func(http.ResponseWriter, *http.Request))
-	Delete(path string, fn func(http.ResponseWriter, *http.Request))
-	Options(path string, fn func(http.ResponseWriter, *http.Request))
+	Get(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
+	Head(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
+	Post(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
+	Put(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
+	Patch(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
+	Delete(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
+	Options(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
+	//TODO: Refactor Match() to accept route middlewares
 	Match(path string, fn func(http.ResponseWriter, *http.Request), verbs ...string)
-	All(path string, fn func(http.ResponseWriter, *http.Request))
-	NotFound(fn func(http.ResponseWriter, *http.Request))
+	All(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
+	NotFound(fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler)
 	Serve()
 	Use(fn MiddlewareHandler, args ...interface{})
 }

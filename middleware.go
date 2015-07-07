@@ -11,7 +11,18 @@ type Middleware struct {
 	args    []interface{}
 }
 
-func processMiddlewares(middlewares []Middleware, rw http.ResponseWriter, req *http.Request, fn handlerFn) {
+func addRouteMiddlewares(handlers ...MiddlewareHandler) []Middleware {
+	routeMiddlewares := []Middleware{}
+	for _, handler := range handlers {
+		middleware := Middleware{handler: handler}
+		routeMiddlewares = append(routeMiddlewares, middleware)
+	}
+	return routeMiddlewares
+}
+
+func processMiddlewares(mw []Middleware, rw http.ResponseWriter, req *http.Request, fn handlerFn, extraMw ...MiddlewareHandler) {
+	middlewares := []Middleware{}
+	middlewares = append(mw, addRouteMiddlewares(extraMw...)...)
 	for _, middleware := range middlewares {
 		next := false
 		middleware.handler(rw, req, func() { next = true }, middleware.args...)

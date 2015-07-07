@@ -70,51 +70,51 @@ func (r *RouteFacade) SubRouter() Routable {
 	return sub
 }
 
-func (r *RouteFacade) Get(path string, fn func(rw http.ResponseWriter, req *http.Request)) {
+func (r *RouteFacade) Get(path string, fn func(rw http.ResponseWriter, req *http.Request), mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
-		processMiddlewares(r.middlewares, rw, req, fn)
+		processMiddlewares(r.middlewares, rw, req, fn, mw...)
 	}
 	r.provider.Get(path, nfn)
 }
 
-func (r *RouteFacade) Head(path string, fn func(http.ResponseWriter, *http.Request)) {
+func (r *RouteFacade) Head(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
-		processMiddlewares(r.middlewares, rw, req, fn)
+		processMiddlewares(r.middlewares, rw, req, fn, mw...)
 	}
 	r.provider.Head(path, nfn)
 }
 
-func (r *RouteFacade) Post(path string, fn func(http.ResponseWriter, *http.Request)) {
+func (r *RouteFacade) Post(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
-		processMiddlewares(r.middlewares, rw, req, fn)
+		processMiddlewares(r.middlewares, rw, req, fn, mw...)
 	}
 	r.provider.Post(path, nfn)
 }
 
-func (r *RouteFacade) Put(path string, fn func(http.ResponseWriter, *http.Request)) {
+func (r *RouteFacade) Put(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
-		processMiddlewares(r.middlewares, rw, req, fn)
+		processMiddlewares(r.middlewares, rw, req, fn, mw...)
 	}
 	r.provider.Put(path, nfn)
 }
 
-func (r *RouteFacade) Patch(path string, fn func(http.ResponseWriter, *http.Request)) {
+func (r *RouteFacade) Patch(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
-		processMiddlewares(r.middlewares, rw, req, fn)
+		processMiddlewares(r.middlewares, rw, req, fn, mw...)
 	}
 	r.provider.Patch(path, nfn)
 }
 
-func (r *RouteFacade) Delete(path string, fn func(http.ResponseWriter, *http.Request)) {
+func (r *RouteFacade) Delete(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
-		processMiddlewares(r.middlewares, rw, req, fn)
+		processMiddlewares(r.middlewares, rw, req, fn, mw...)
 	}
 	r.provider.Delete(path, nfn)
 }
 
-func (r *RouteFacade) Options(path string, fn func(http.ResponseWriter, *http.Request)) {
+func (r *RouteFacade) Options(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
-		processMiddlewares(r.middlewares, rw, req, fn)
+		processMiddlewares(r.middlewares, rw, req, fn, mw...)
 	}
 	r.provider.Options(path, nfn)
 }
@@ -126,16 +126,16 @@ func (r *RouteFacade) Match(path string, fn func(http.ResponseWriter, *http.Requ
 	r.provider.Match(path, nfn, verbs...)
 }
 
-func (r *RouteFacade) All(path string, fn func(http.ResponseWriter, *http.Request)) {
+func (r *RouteFacade) All(path string, fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
-		processMiddlewares(r.middlewares, rw, req, fn)
+		processMiddlewares(r.middlewares, rw, req, fn, mw...)
 	}
 	r.provider.All(path, nfn)
 }
 
-func (r *RouteFacade) NotFound(fn func(http.ResponseWriter, *http.Request)) {
+func (r *RouteFacade) NotFound(fn func(http.ResponseWriter, *http.Request), mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
-		processMiddlewares(r.middlewares, rw, req, fn)
+		processMiddlewares(r.middlewares, rw, req, fn, mw...)
 	}
 	r.provider.NotFound(nfn)
 }
