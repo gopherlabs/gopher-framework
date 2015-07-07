@@ -11,7 +11,16 @@ type Middleware struct {
 	args    []interface{}
 }
 
-func routeMiddleware(c *Container, rw http.ResponseWriter, req *http.Request, fn handlerFn) {
+func processMiddlewares(middlewares []Middleware, rw http.ResponseWriter, req *http.Request, fn handlerFn) {
+	for _, middleware := range middlewares {
+		next := false
+		middleware.handler(rw, req, func() { next = true }, middleware.args...)
+		if next {
+			continue
+		} else {
+			return
+		}
+	}
 	fn(rw, req)
 }
 
