@@ -2,8 +2,6 @@ package framework
 
 import "net/http"
 
-type handlerFn func(rw http.ResponseWriter, req *http.Request)
-
 type MiddlewareHandler func(rw http.ResponseWriter, req *http.Request, next func(), args ...interface{})
 
 type Middleware struct {
@@ -20,7 +18,7 @@ func addRouteMiddlewares(handlers ...MiddlewareHandler) []Middleware {
 	return routeMiddlewares
 }
 
-func processMiddlewares(mw []Middleware, rw http.ResponseWriter, req *http.Request, fn handlerFn, extraMw ...MiddlewareHandler) {
+func processMiddlewares(mw []Middleware, rw http.ResponseWriter, req *http.Request, fn HandlerFn, extraMw ...MiddlewareHandler) {
 	middlewares := []Middleware{}
 	middlewares = append(mw, addRouteMiddlewares(extraMw...)...)
 	for _, middleware := range middlewares {
