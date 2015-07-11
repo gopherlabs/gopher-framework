@@ -11,6 +11,8 @@ const (
 var c *Container
 
 type Config map[string]map[string]interface{}
+
+//TODO Replace Context with concurrent-map: https://github.com/streamrail/concurrent-map
 type Context map[string]interface{}
 
 type Container struct {
@@ -22,8 +24,8 @@ type Container struct {
 
 func NewContainer(config ...Config) *Container {
 	c = new(Container)
-	c.providers = map[string]Providerable{}
-	c.context = Context{}
+	c.providers = make(map[string]Providerable)
+	c.context = make(Context)
 	if len(config) > 0 {
 		c.config = config[0]
 	}
