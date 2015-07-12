@@ -52,6 +52,14 @@ type Routable interface {
 	Use(fn MiddlewareHandler, args ...interface{})
 }
 
+type Mappable interface {
+	Providerable
+	Get(key string) interface{}
+	Has(key string) bool
+	Set(key string, value interface{})
+	Remove(key string)
+}
+
 /*
 type Samplable interface {
 	Providerable
