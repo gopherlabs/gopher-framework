@@ -17,6 +17,8 @@ type Container struct {
 	config      Config
 	providers   map[string]Providerable
 	middlewares []Middleware
+	Log         Loggable
+	Router      Routable
 }
 
 func NewContainer(config ...Config) *Container {
@@ -35,10 +37,21 @@ func (container *Container) RegisterProvider(provider interface{}) {
 		config = container.config[key]
 	}
 	container.providers[key] = provider.(Providerable).Register(config).(Providerable)
-	if key == LOGGER {
+	switch key {
+	case LOGGER:
+		container.Log = container.providers[key].(Loggable)
 		showLoadingHeader()
+	case ROUTER:
+		container.Router = new(RouteFacade).NewRouter()
+		/*
+			router := new(RouteFacade)
+			router.middlewares = container.middlewares
+			router.provider = container.providers[key].(Routable)
+			container.Router = router
+		*/
+
 	}
-	container.providers[LOGGER].(Loggable).Info("| * " + key + " ✓")
+	container.Log.Info("| * " + key + " ✓")
 }
 
 // Middleware
@@ -48,23 +61,22 @@ func (container *Container) Use(mw MiddlewareHandler, args ...interface{}) {
 }
 
 func showLoadingHeader() {
-	c.providers[LOGGER].(Loggable).Info(`|----------------------------------------|`)
-	c.providers[LOGGER].(Loggable).Info(`| LOADING SERVICE PROVIDERS ...`)
-	c.providers[LOGGER].(Loggable).Info(`|----------------------------------------|`)
+	c.Log.Info(`|----------------------------------------|`)
+	c.Log.Info(`| LOADING SERVICE PROVIDERS ...`)
+	c.Log.Info(`|----------------------------------------|`)
 }
 
 func (container *Container) showBanner() {
-	log := container.providers[LOGGER].(Loggable).NewLog()
-	log.Info(`|----------------------------------------|`)
-	log.Info(`|    _____                                `)
-	log.Info(`|   / ____|           | |                 `)
-	log.Info(`|  | |  __  ___  _ __ | |__   ___ _ __    `)
-	log.Info(`|  | | |_ |/ _ \| '_ \| '_ \ / _ \ '__|   `)
-	log.Info(`|  | |__| | (_) | |_) | | | |  __/ |      `)
-	log.Info(`|   \_____|\___/| .__/|_| |_|\___|_|      `)
-	log.Info(`|               | |                       `)
-	log.Info(`|               |_|                       `)
-	log.Info(`|----------------------------------------|`)
-	log.Info(`| GOPHER READY FOR ACTION ON PORT 3000	`)
-	log.Info(`|----------------------------------------|`)
+	c.Log.Info(`|----------------------------------------|`)
+	c.Log.Info(`|    _____                                `)
+	c.Log.Info(`|   / ____|           | |                 `)
+	c.Log.Info(`|  | |  __  ___  _ __ | |__   ___ _ __    `)
+	c.Log.Info(`|  | | |_ |/ _ \| '_ \| '_ \ / _ \ '__|   `)
+	c.Log.Info(`|  | |__| | (_) | |_) | | | |  __/ |      `)
+	c.Log.Info(`|   \_____|\___/| .__/|_| |_|\___|_|      `)
+	c.Log.Info(`|               | |                       `)
+	c.Log.Info(`|               |_|                       `)
+	c.Log.Info(`|----------------------------------------|`)
+	c.Log.Info(`| GOPHER READY FOR ACTION ON PORT 3000	`)
+	c.Log.Info(`|----------------------------------------|`)
 }

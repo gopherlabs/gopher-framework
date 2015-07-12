@@ -34,6 +34,6 @@ func processMiddlewares(mw []Middleware, rw http.ResponseWriter, req *http.Reque
 }
 
 func LoggerMiddleware(rw http.ResponseWriter, req *http.Request, next func(), args ...interface{}) {
-	c.providers[LOGGER].(Loggable).Info("[%s] %s", req.Method, req.URL.Path)
+	c.Log.Info("[%s] %s", req.Method, req.URL.Path)
 	next()
 }

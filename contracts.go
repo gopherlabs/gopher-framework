@@ -13,7 +13,7 @@ type Providerable interface {
 
 type Loggable interface {
 	Providerable
-	NewLog() Loggable
+	//NewLog() Loggable
 	Info(msg string, args ...interface{})
 	Debug(msg string, args ...interface{})
 	Warn(msg string, args ...interface{})
@@ -37,7 +37,7 @@ type Routable interface {
 	Providerable
 	http.Handler
 	NewRouter() Routable
-	SubRouter() Routable
+	//SubRouter() Routable
 	Get(path string, fn HandlerFn, mw ...MiddlewareHandler)
 	Head(path string, fn HandlerFn, mw ...MiddlewareHandler)
 	Post(path string, fn HandlerFn, mw ...MiddlewareHandler)

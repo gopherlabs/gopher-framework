@@ -9,9 +9,11 @@ type RouteFacade struct {
 	middlewares []Middleware
 }
 
+/*
 func (c Container) NewRouter() Routable {
 	return new(RouteFacade).NewRouter()
 }
+*/
 
 func (r *RouteFacade) Register(config map[string]interface{}) interface{} {
 	return r
@@ -28,15 +30,18 @@ func (r *RouteFacade) NewRouter() Routable {
 	return r
 }
 
+/*
 func (r *RouteFacade) SubRouter() Routable {
 	sub := new(RouteFacade)
 	sub.middlewares = r.middlewares
 	sub.provider = c.providers[ROUTER].(Routable).SubRouter()
 	return sub
 }
+*/
 
 func (r *RouteFacade) Get(path string, fn HandlerFn, mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
+		c.Log.Info("inside route: " + path)
 		processMiddlewares(r.middlewares, rw, req, fn, mw...)
 	}
 	r.provider.Get(path, nfn)
@@ -117,9 +122,20 @@ func (r *RouteFacade) Use(mw MiddlewareHandler, args ...interface{}) {
 }
 
 // Logger
-func (c Container) NewLog() Loggable {
-	return c.providers[LOGGER].(Loggable).NewLog()
+
+//func (c *Container) NewLog() Loggable {
+//	return c.providers[LOGGER].(Loggable)
+//}
+
+/*
+func (c *Container) Info(msg string, args ...interface{}) {
+	c.providers[LOGGER].(Loggable).Info(msg, args...)
 }
+
+func (c *Container) Debug(msg string, args ...interface{}) {
+	c.providers[LOGGER].(Loggable).Debug(msg, args...)
+}
+*/
 
 // Parameters
 func (c Container) PathParams(req *http.Request) map[string]string {
