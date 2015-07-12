@@ -2,41 +2,6 @@ package framework
 
 import "net/http"
 
-// Sample facade
-/*
-type SampleFacade struct {
-	name     string
-	provider Samplable
-}
-
-func (c Container) NewSample() Samplable {
-	return new(SampleFacade).NewSample()
-}
-
-func (p *SampleFacade) Register(config map[string]interface{}) interface{} {
-	return p
-}
-
-func (p *SampleFacade) GetKey() string {
-	return p.provider.GetKey()
-}
-
-func (p *SampleFacade) NewSample() Samplable {
-	p = new(SampleFacade)
-	p.provider = c.providers[SAMPLE].(Samplable).NewSample()
-	return p
-}
-
-func (p *SampleFacade) GetName() string {
-	name := p.provider.GetName()
-	return name
-}
-
-func (p *SampleFacade) SetName(name string) {
-	p.provider.SetName("facade added: " + name)
-}
-*/
-
 // Router Facade
 type RouteFacade struct {
 	http.Handler
@@ -171,25 +136,19 @@ func (c Container) View(rw http.ResponseWriter, status int, name string, binding
 	c.providers[RENDERER].(Renderable).View(rw, status, name, binding)
 }
 
-/*
-
-// Parameters
-func (c appContainer) PathParams(req *http.Request) map[string]string {
-	return c.providers[PARAMS].(Parametable).PathParams(req)
+// Context
+func (c Container) Get(key string) (value interface{}) {
+	return c.providers[MAPPER].(Mappable).Get(key)
 }
 
-// Parameters
-func (c appContainer) PathParam(req *http.Request, param string) string {
-	return c.providers[PARAMS].(Parametable).PathParam(req, param)
+func (c Container) Has(key string) bool {
+	return c.providers[MAPPER].(Mappable).Has(key)
 }
 
-// Logger
-func (c appContainer) Log() Loggable {
-	return c.providers[LOGGER].(Loggable)
+func (c Container) Set(key string, value interface{}) {
+	c.providers[MAPPER].(Mappable).Set(key, value)
 }
 
-// Renderer
-func (c appContainer) View(rw http.ResponseWriter, status int, name string, binding interface{}) {
-	c.providers[RENDERER].(Renderable).View(rw, status, name, binding)
+func (c Container) Remove(key string) {
+	c.providers[MAPPER].(Mappable).Remove(key)
 }
-*/
