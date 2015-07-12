@@ -6,26 +6,22 @@ const (
 	RENDERER = "RENDERER"
 	PARAMS   = "PARAMS"
 	SAMPLE   = "SAMPLE"
+	MAPPER   = "MAPPER"
 )
 
 var c *Container
 
 type Config map[string]map[string]interface{}
 
-//TODO Replace Context with concurrent-map: https://github.com/streamrail/concurrent-map
-type Context map[string]interface{}
-
 type Container struct {
 	config      Config
 	providers   map[string]Providerable
 	middlewares []Middleware
-	context     Context
 }
 
 func NewContainer(config ...Config) *Container {
 	c = new(Container)
 	c.providers = make(map[string]Providerable)
-	c.context = make(Context)
 	if len(config) > 0 {
 		c.config = config[0]
 	}
@@ -49,28 +45,6 @@ func (container *Container) RegisterProvider(provider interface{}) {
 func (container *Container) Use(mw MiddlewareHandler, args ...interface{}) {
 	middleware := Middleware{handler: mw, args: args}
 	container.middlewares = append(container.middlewares, middleware)
-}
-
-// App Container Context
-func (container Container) Context() Context {
-	return c.context
-}
-
-func (context Context) Read(key string) interface{} {
-	return c.context[key]
-}
-
-func (context Context) Has(key string) bool {
-	_, exists := c.context[key]
-	return exists
-}
-
-func (context Context) Write(key string, data interface{}) {
-	c.context[key] = data
-}
-
-func (context Context) Remove(key string) {
-	delete(c.context, key)
 }
 
 func showLoadingHeader() {
