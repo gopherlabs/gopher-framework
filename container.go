@@ -19,6 +19,7 @@ type Container struct {
 	middlewares []Middleware
 	Log         Loggable
 	Router      Routable
+	Context     Mappable
 }
 
 func NewContainer(config ...Config) *Container {
@@ -41,6 +42,8 @@ func (container *Container) RegisterProvider(provider interface{}) {
 	case LOGGER:
 		container.Log = container.providers[key].(Loggable)
 		showLoadingHeader()
+	case MAPPER:
+		container.Context = container.providers[key].(Mappable)
 	case ROUTER:
 		container.Router = new(RouteFacade).NewRouter()
 		/*

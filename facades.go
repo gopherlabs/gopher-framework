@@ -41,7 +41,6 @@ func (r *RouteFacade) SubRouter() Routable {
 
 func (r *RouteFacade) Get(path string, fn HandlerFn, mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
-		c.Log.Info("inside route: " + path)
 		processMiddlewares(r.middlewares, rw, req, fn, mw...)
 	}
 	r.provider.Get(path, nfn)
@@ -121,22 +120,6 @@ func (r *RouteFacade) Use(mw MiddlewareHandler, args ...interface{}) {
 	r.middlewares = append(r.middlewares, middleware)
 }
 
-// Logger
-
-//func (c *Container) NewLog() Loggable {
-//	return c.providers[LOGGER].(Loggable)
-//}
-
-/*
-func (c *Container) Info(msg string, args ...interface{}) {
-	c.providers[LOGGER].(Loggable).Info(msg, args...)
-}
-
-func (c *Container) Debug(msg string, args ...interface{}) {
-	c.providers[LOGGER].(Loggable).Debug(msg, args...)
-}
-*/
-
 // Parameters
 func (c Container) PathParams(req *http.Request) map[string]string {
 	return c.providers[PARAMS].(Parametable).PathParams(req)
@@ -150,21 +133,4 @@ func (c Container) PathParam(req *http.Request, param string) string {
 // Renderer
 func (c Container) View(rw http.ResponseWriter, status int, name string, binding interface{}) {
 	c.providers[RENDERER].(Renderable).View(rw, status, name, binding)
-}
-
-// Context
-func (c Container) Get(key string) (value interface{}) {
-	return c.providers[MAPPER].(Mappable).Get(key)
-}
-
-func (c Container) Has(key string) bool {
-	return c.providers[MAPPER].(Mappable).Has(key)
-}
-
-func (c Container) Set(key string, value interface{}) {
-	c.providers[MAPPER].(Mappable).Set(key, value)
-}
-
-func (c Container) Remove(key string) {
-	c.providers[MAPPER].(Mappable).Remove(key)
 }
