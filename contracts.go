@@ -59,12 +59,3 @@ type Mappable interface {
 	Set(key string, value interface{})
 	Remove(key string)
 }
-
-/*
-type Samplable interface {
-	Providerable
-	NewSample() Samplable
-	GetName() string
-	SetName(name string)
-}
-*/
