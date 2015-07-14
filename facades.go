@@ -131,6 +131,6 @@ func (c Container) PathParam(req *http.Request, param string) string {
 }
 
 // Renderer
-func (c Container) View(rw http.ResponseWriter, status int, name string, binding interface{}) {
-	c.providers[RENDERER].(Renderable).View(rw, status, name, binding)
-}
+//func (c Container) View(rw http.ResponseWriter, status int, name string, binding interface{}) {
+//	c.providers[RENDERER].(Renderable).View(rw, status, name, binding)
+//}

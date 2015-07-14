@@ -20,6 +20,7 @@ type Container struct {
 	Log         Loggable
 	Router      Routable
 	Context     Mappable
+	Render      Renderable
 }
 
 func NewContainer(config ...Config) *Container {
@@ -44,6 +45,8 @@ func (container *Container) RegisterProvider(provider interface{}) {
 		showLoadingHeader()
 	case MAPPER:
 		container.Context = container.providers[key].(Mappable)
+	case RENDERER:
+		container.Render = container.providers[key].(Renderable)
 	case ROUTER:
 		container.Router = new(RouteFacade).NewRouter()
 		/*

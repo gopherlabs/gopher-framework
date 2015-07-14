@@ -29,6 +29,11 @@ type Parametable interface {
 
 type Renderable interface {
 	Providerable
+	Data(rw http.ResponseWriter, status int, data []byte)
+	Text(rw http.ResponseWriter, data string, status ...int)
+	JSON(rw http.ResponseWriter, status int, data interface{})
+	JSONP(rw http.ResponseWriter, status int, callback string, data interface{})
+	XML(rw http.ResponseWriter, status int, data interface{})
 	View(rw http.ResponseWriter, status int, name string, binding interface{})
 }
 
