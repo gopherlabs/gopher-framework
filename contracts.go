@@ -11,6 +11,11 @@ type Providerable interface {
 	GetKey() string
 }
 
+type Servable interface {
+	http.Handler
+	Serve()
+}
+
 type Loggable interface {
 	Info(msg string, args ...interface{})
 	Debug(msg string, args ...interface{})
@@ -35,7 +40,6 @@ type Renderable interface {
 }
 
 type Routable interface {
-	http.Handler
 	NewRouter() Routable
 	//SubRouter() Routable
 	Get(path string, fn HandlerFn, mw ...MiddlewareHandler)
@@ -48,7 +52,7 @@ type Routable interface {
 	Match(path string, fn HandlerFn, verbs []string, mw ...MiddlewareHandler)
 	All(path string, fn HandlerFn, mw ...MiddlewareHandler)
 	NotFound(fn HandlerFn, mw ...MiddlewareHandler)
-	Serve()
+	//Serve()
 	Use(fn MiddlewareHandler, args ...interface{})
 }
 

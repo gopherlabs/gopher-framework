@@ -112,7 +112,7 @@ func (r *RouteFacade) NotFound(fn HandlerFn, mw ...MiddlewareHandler) {
 
 func (r *RouteFacade) Serve() {
 	c.showBanner()
-	r.provider.Serve()
+	r.provider.(Servable).Serve()
 }
 
 // Middleware
