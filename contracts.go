@@ -12,7 +12,6 @@ type Providerable interface {
 }
 
 type Loggable interface {
-	Providerable
 	Info(msg string, args ...interface{})
 	Debug(msg string, args ...interface{})
 	Warn(msg string, args ...interface{})
@@ -22,13 +21,11 @@ type Loggable interface {
 }
 
 type Parametable interface {
-	Providerable
 	PathParams(r *http.Request) map[string]string
 	PathParam(r *http.Request, param string) string
 }
 
 type Renderable interface {
-	Providerable
 	Data(rw http.ResponseWriter, status int, data []byte)
 	Text(rw http.ResponseWriter, data string, status ...int)
 	JSON(rw http.ResponseWriter, status int, data interface{})
@@ -38,7 +35,6 @@ type Renderable interface {
 }
 
 type Routable interface {
-	Providerable
 	http.Handler
 	NewRouter() Routable
 	//SubRouter() Routable
@@ -57,7 +53,6 @@ type Routable interface {
 }
 
 type Mappable interface {
-	Providerable
 	Get(key string) interface{}
 	Has(key string) bool
 	Set(key string, value interface{})

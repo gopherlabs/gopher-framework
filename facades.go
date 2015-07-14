@@ -1,6 +1,8 @@
 package framework
 
-import "net/http"
+import (
+	"net/http"
+)
 
 // Router Facade
 type RouteFacade struct {
@@ -20,7 +22,7 @@ func (r *RouteFacade) Register(config map[string]interface{}) interface{} {
 }
 
 func (r *RouteFacade) GetKey() string {
-	return r.provider.GetKey()
+	return r.provider.(Providerable).GetKey()
 }
 
 func (r *RouteFacade) NewRouter() Routable {
