@@ -26,12 +26,12 @@ type Parametable interface {
 }
 
 type Renderable interface {
-	Data(rw http.ResponseWriter, status int, data []byte)
+	Data(rw http.ResponseWriter, data []byte, status ...int)
 	Text(rw http.ResponseWriter, data string, status ...int)
-	JSON(rw http.ResponseWriter, status int, data interface{})
-	JSONP(rw http.ResponseWriter, status int, callback string, data interface{})
-	XML(rw http.ResponseWriter, status int, data interface{})
-	View(rw http.ResponseWriter, status int, name string, binding interface{})
+	JSON(rw http.ResponseWriter, data interface{}, status ...int)
+	JSONP(rw http.ResponseWriter, callback string, data interface{}, status ...int)
+	XML(rw http.ResponseWriter, data interface{}, status ...int)
+	View(rw http.ResponseWriter, name string, binding interface{}, status ...int)
 }
 
 type Routable interface {
