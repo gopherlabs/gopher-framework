@@ -51,7 +51,6 @@ type Routable interface {
 	Match(path string, fn HandlerFn, verbs []string, mw ...MiddlewareHandler)
 	All(path string, fn HandlerFn, mw ...MiddlewareHandler)
 	NotFound(fn HandlerFn, mw ...MiddlewareHandler)
-	//Serve()
 	Use(fn MiddlewareHandler, args ...interface{})
 }
 
