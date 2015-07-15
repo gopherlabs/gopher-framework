@@ -18,7 +18,7 @@ type Container struct {
 	providers   map[string]Providerable
 	middlewares []Middleware
 	Log         Loggable
-	Router      Routable
+	Route       Routable
 	Context     Mappable
 	Render      Renderable
 }
@@ -48,7 +48,7 @@ func (container *Container) RegisterProvider(provider interface{}) {
 	case RENDERER:
 		container.Render = container.providers[key].(Renderable)
 	case ROUTER:
-		container.Router = new(RouteFacade).NewRouter()
+		container.Route = new(RouteFacade).NewRouter()
 	}
 	container.Log.Info("| * " + key + " ✓")
 }
