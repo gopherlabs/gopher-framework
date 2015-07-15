@@ -5,7 +5,6 @@ const (
 	ROUTER   = "ROUTER"
 	RENDERER = "RENDERER"
 	PARAMS   = "PARAMS"
-	SAMPLE   = "SAMPLE"
 	MAPPER   = "MAPPER"
 )
 
