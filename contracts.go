@@ -51,6 +51,8 @@ type Routable interface {
 	Match(path string, fn HandlerFn, verbs []string, mw ...MiddlewareHandler)
 	All(path string, fn HandlerFn, mw ...MiddlewareHandler)
 	NotFound(fn HandlerFn, mw ...MiddlewareHandler)
+	Vars(r *http.Request) map[string]string
+	Var(r *http.Request, param string) string
 	Use(fn MiddlewareHandler, args ...interface{})
 }
 

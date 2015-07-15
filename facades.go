@@ -106,6 +106,14 @@ func (r *RouteFacade) NotFound(fn HandlerFn, mw ...MiddlewareHandler) {
 	r.provider.NotFound(nfn)
 }
 
+func (r *RouteFacade) Vars(req *http.Request) map[string]string {
+	return r.provider.(Routable).Vars(req)
+}
+
+func (r *RouteFacade) Var(req *http.Request, name string) string {
+	return r.provider.(Routable).Var(req, name)
+}
+
 func (r *RouteFacade) Serve() {
 	c.showBanner()
 	r.provider.(Servable).Serve()
