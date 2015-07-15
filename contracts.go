@@ -7,7 +7,7 @@ import (
 type HandlerFn func(rw http.ResponseWriter, req *http.Request)
 
 type Providerable interface {
-	Register(config map[string]interface{}) interface{}
+	Register(c *Container, config interface{}) interface{}
 	GetKey() string
 }
 

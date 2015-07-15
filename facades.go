@@ -11,9 +11,10 @@ type RouteFacade struct {
 	middlewares []Middleware
 }
 
-func (r *RouteFacade) Register(config map[string]interface{}) interface{} {
+func (r *RouteFacade) Register(c *Container, config interface{}) interface{} {
 	r = new(RouteFacade)
-	r.provider = c.providers[ROUTER].(Providerable).Register(config).(Routable)
+	conf := config.(ConfigRouter)
+	r.provider = c.providers[ROUTER].(Providerable).Register(c, conf).(Routable)
 	return r
 }
 
@@ -109,7 +110,7 @@ func (r *RouteFacade) Var(req *http.Request, name string) string {
 }
 
 func (r *RouteFacade) Serve() {
-	c.showBanner()
+	c.showBanner(c.config[ROUTER].(ConfigRouter).Port)
 	r.provider.(Servable).Serve()
 }
 

@@ -1,5 +1,7 @@
 package framework
 
+import "strconv"
+
 const (
 	LOGGER   = "LOGGER"
 	ROUTER   = "ROUTER"
@@ -8,8 +10,7 @@ const (
 )
 
 var c *Container
-
-type Config map[string]map[string]interface{}
+var Initialized bool
 
 type Container struct {
 	config      Config
@@ -21,13 +22,26 @@ type Container struct {
 	Render      Renderable
 }
 
-func NewContainer(config ...Config) *Container {
+func NewContainer(config ...map[string]interface{}) *Container {
 	c = new(Container)
 	c.providers = make(map[string]Providerable)
+	c.config = defaultConfig
 	if len(config) > 0 {
-		c.config = config[0]
+		c.applyConfig(config[0])
 	}
 	return c
+}
+
+func (container *Container) applyConfig(in Config) {
+	if in[LOGGER] != nil {
+		c.config[LOGGER] = ConfigLogger(in[LOGGER].(ConfigLogger))
+	}
+	if in[ROUTER] != nil {
+		c.config[ROUTER] = ConfigRouter(in[ROUTER].(ConfigRouter))
+	}
+	if in[RENDERER] != nil {
+		c.config[RENDERER] = ConfigRenderer(in[RENDERER].(ConfigRenderer))
+	}
 }
 
 func (container *Container) RegisterProvider(provider interface{}) {
@@ -36,19 +50,23 @@ func (container *Container) RegisterProvider(provider interface{}) {
 	if len(container.config) > 0 {
 		config = container.config[key]
 	}
-	container.providers[key] = provider.(Providerable).Register(config).(Providerable)
 	switch key {
 	case LOGGER:
-		container.Log = container.providers[key].(Loggable)
-		showLoadingHeader()
+		container.Log = provider.(Providerable).Register(c, config).(Loggable)
+		if Initialized == false {
+			showLoadingHeader()
+		}
 	case MAPPER:
-		container.Context = container.providers[key].(Mappable)
+		container.Context = provider.(Providerable).Register(c, config).(Mappable)
 	case RENDERER:
-		container.Render = container.providers[key].(Renderable)
+		container.Render = provider.(Providerable).Register(c, config).(Renderable)
 	case ROUTER:
-		container.Route = new(RouteFacade).Register(config).(Routable)
+		container.providers[key] = provider.(Providerable)
+		container.Route = new(RouteFacade).Register(c, config).(Routable)
 	}
-	container.Log.Info("| * " + key + " ✓")
+	if Initialized == false {
+		container.Log.Info("| * " + key + " ✓")
+	}
 }
 
 // Middleware
@@ -63,7 +81,7 @@ func showLoadingHeader() {
 	c.Log.Info(`|----------------------------------------|`)
 }
 
-func (container *Container) showBanner() {
+func (container *Container) showBanner(port int) {
 	c.Log.Info(`|----------------------------------------|`)
 	c.Log.Info(`|    _____                                `)
 	c.Log.Info(`|   / ____|           | |                 `)
@@ -74,6 +92,6 @@ func (container *Container) showBanner() {
 	c.Log.Info(`|               | |                       `)
 	c.Log.Info(`|               |_|                       `)
 	c.Log.Info(`|----------------------------------------|`)
-	c.Log.Info(`| GOPHER READY FOR ACTION ON PORT 3000	`)
+	c.Log.Info(`| GOPHER READY FOR ACTION ON PORT ` + strconv.Itoa(port))
 	c.Log.Info(`|----------------------------------------|`)
 }
