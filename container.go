@@ -4,7 +4,6 @@ const (
 	LOGGER   = "LOGGER"
 	ROUTER   = "ROUTER"
 	RENDERER = "RENDERER"
-	PARAMS   = "PARAMS"
 	MAPPER   = "MAPPER"
 )
 

@@ -25,11 +25,6 @@ type Loggable interface {
 	Panic(msg string, args ...interface{})
 }
 
-type Parametable interface {
-	PathParams(r *http.Request) map[string]string
-	PathParam(r *http.Request, param string) string
-}
-
 type Renderable interface {
 	Data(rw http.ResponseWriter, data []byte, status ...int)
 	Text(rw http.ResponseWriter, data string, status ...int)

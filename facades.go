@@ -11,12 +11,6 @@ type RouteFacade struct {
 	middlewares []Middleware
 }
 
-/*
-func (c Container) NewRouter() Routable {
-	return new(RouteFacade).NewRouter()
-}
-*/
-
 func (r *RouteFacade) Register(config map[string]interface{}) interface{} {
 	r = new(RouteFacade)
 	r.provider = c.providers[ROUTER].(Providerable).Register(config).(Routable)
@@ -124,18 +118,3 @@ func (r *RouteFacade) Use(mw MiddlewareHandler, args ...interface{}) {
 	middleware := Middleware{handler: mw, args: args}
 	r.middlewares = append(r.middlewares, middleware)
 }
-
-// Parameters
-func (c Container) PathParams(req *http.Request) map[string]string {
-	return c.providers[PARAMS].(Parametable).PathParams(req)
-}
-
-// Parameters
-func (c Container) PathParam(req *http.Request, param string) string {
-	return c.providers[PARAMS].(Parametable).PathParam(req, param)
-}
-
-// Renderer
-//func (c Container) View(rw http.ResponseWriter, status int, name string, binding interface{}) {
-//	c.providers[RENDERER].(Renderable).View(rw, status, name, binding)
-//}
