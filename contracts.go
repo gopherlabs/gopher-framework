@@ -40,7 +40,6 @@ type Renderable interface {
 }
 
 type Routable interface {
-	NewRouter() Routable
 	//SubRouter() Routable
 	Get(path string, fn HandlerFn, mw ...MiddlewareHandler)
 	Head(path string, fn HandlerFn, mw ...MiddlewareHandler)

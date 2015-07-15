@@ -18,17 +18,13 @@ func (c Container) NewRouter() Routable {
 */
 
 func (r *RouteFacade) Register(config map[string]interface{}) interface{} {
+	r = new(RouteFacade)
+	r.provider = c.providers[ROUTER].(Providerable).Register(config).(Routable)
 	return r
 }
 
 func (r *RouteFacade) GetKey() string {
 	return r.provider.(Providerable).GetKey()
-}
-
-func (r *RouteFacade) NewRouter() Routable {
-	r = new(RouteFacade)
-	r.provider = c.providers[ROUTER].(Routable).NewRouter()
-	return r
 }
 
 /*

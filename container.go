@@ -47,7 +47,7 @@ func (container *Container) RegisterProvider(provider interface{}) {
 	case RENDERER:
 		container.Render = container.providers[key].(Renderable)
 	case ROUTER:
-		container.Route = new(RouteFacade).NewRouter()
+		container.Route = new(RouteFacade).Register(config).(Routable)
 	}
 	container.Log.Info("| * " + key + " ✓")
 }
