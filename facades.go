@@ -19,10 +19,10 @@ type RouteGroupFacade struct {
 
 type GroupMatcher struct {
 	Host       string
-	Schemes    string
 	PathPrefix string
 	Methods    []string
 	Queries    []string
+	Schemes    []string
 }
 
 func (g *RouteGroupFacade) New(matcher GroupMatcher) Routable {
