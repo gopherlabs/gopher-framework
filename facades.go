@@ -35,20 +35,6 @@ func (r *RouteFacade) GetKey() string {
 	return r.provider.(Providerable).GetKey()
 }
 
-//func (r *RouteFacade) SubRouter() Routable {
-//	sub := new(RouteFacade)
-//	sub.middlewares = r.middlewares
-//	sub.provider = c.providers[ROUTER].(Subroutable).SubRouter()
-//	return sub
-//}
-
-//func (r *RouteFacade) Group(fn func()) {
-//	sub := new(RouteFacade)
-//	sub.middlewares = r.middlewares
-//	sub.provider = c.providers[ROUTER].(Subroutable).SubRouter()
-//	fn()
-//}
-
 func (r *RouteFacade) Get(path string, fn HandlerFn, mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {
 		processMiddlewares(append(c.middlewares, r.middlewares...), rw, req, fn, mw...)
