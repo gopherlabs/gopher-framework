@@ -17,11 +17,11 @@ type Servable interface {
 }
 
 type Subroutable interface {
-	SubRouter() Routable
+	SubRouter(matcher GroupMatcher) Routable
 }
 
 type Routegroupable interface {
-	New() Routable
+	New(matcher GroupMatcher) Routable
 }
 
 type Loggable interface {

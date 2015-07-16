@@ -17,9 +17,17 @@ type RouteGroupFacade struct {
 	container *Container
 }
 
-func (g *RouteGroupFacade) New() Routable {
+type GroupMatcher struct {
+	Host       string
+	Schemes    string
+	PathPrefix string
+	Methods    []string
+	Queries    []string
+}
+
+func (g *RouteGroupFacade) New(matcher GroupMatcher) Routable {
 	group := new(RouteFacade)
-	group.provider = c.providers[ROUTER].(Subroutable).SubRouter()
+	group.provider = c.providers[ROUTER].(Subroutable).SubRouter(matcher)
 	return group
 }
 
