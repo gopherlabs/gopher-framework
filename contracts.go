@@ -16,6 +16,14 @@ type Servable interface {
 	Serve()
 }
 
+type Subroutable interface {
+	SubRouter() Routable
+}
+
+type Routegroupable interface {
+	New() Routable
+}
+
 type Loggable interface {
 	Info(msg string, args ...interface{})
 	Debug(msg string, args ...interface{})
@@ -35,7 +43,6 @@ type Renderable interface {
 }
 
 type Routable interface {
-	//SubRouter() Routable
 	Get(path string, fn HandlerFn, mw ...MiddlewareHandler)
 	Head(path string, fn HandlerFn, mw ...MiddlewareHandler)
 	Post(path string, fn HandlerFn, mw ...MiddlewareHandler)

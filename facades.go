@@ -9,9 +9,22 @@ type RouteFacade struct {
 	http.Handler
 	provider    Routable
 	middlewares []Middleware
+	container   *Container
+}
+
+type RouteGroupFacade struct {
+	route     Routable
+	container *Container
+}
+
+func (g *RouteGroupFacade) New() Routable {
+	group := new(RouteFacade)
+	group.provider = c.providers[ROUTER].(Subroutable).SubRouter()
+	return group
 }
 
 func (r *RouteFacade) Register(c *Container, config interface{}) interface{} {
+	r.container = c
 	r = new(RouteFacade)
 	conf := config.(ConfigRouter)
 	r.provider = c.providers[ROUTER].(Providerable).Register(c, conf).(Routable)
@@ -22,14 +35,19 @@ func (r *RouteFacade) GetKey() string {
 	return r.provider.(Providerable).GetKey()
 }
 
-/*
-func (r *RouteFacade) SubRouter() Routable {
-	sub := new(RouteFacade)
-	sub.middlewares = r.middlewares
-	sub.provider = c.providers[ROUTER].(Routable).SubRouter()
-	return sub
-}
-*/
+//func (r *RouteFacade) SubRouter() Routable {
+//	sub := new(RouteFacade)
+//	sub.middlewares = r.middlewares
+//	sub.provider = c.providers[ROUTER].(Subroutable).SubRouter()
+//	return sub
+//}
+
+//func (r *RouteFacade) Group(fn func()) {
+//	sub := new(RouteFacade)
+//	sub.middlewares = r.middlewares
+//	sub.provider = c.providers[ROUTER].(Subroutable).SubRouter()
+//	fn()
+//}
 
 func (r *RouteFacade) Get(path string, fn HandlerFn, mw ...MiddlewareHandler) {
 	nfn := func(rw http.ResponseWriter, req *http.Request) {

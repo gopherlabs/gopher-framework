@@ -18,6 +18,7 @@ type Container struct {
 	middlewares []Middleware
 	Log         Loggable
 	Route       Routable
+	RouteGroup  Routegroupable
 	Context     Mappable
 	Render      Renderable
 }
@@ -63,6 +64,7 @@ func (container *Container) RegisterProvider(provider interface{}) {
 	case ROUTER:
 		container.providers[key] = provider.(Providerable)
 		container.Route = new(RouteFacade).Register(c, config).(Routable)
+		container.RouteGroup = new(RouteGroupFacade)
 	}
 	if Initialized == false {
 		container.Log.Info("| * " + key + " ✓")
