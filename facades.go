@@ -131,3 +131,7 @@ func (r *RouteFacade) Use(mw MiddlewareHandler, args ...interface{}) {
 	middleware := Middleware{handler: mw, args: args}
 	r.middlewares = append(r.middlewares, middleware)
 }
+
+func (r *RouteFacade) Static(path string, dir string) {
+	r.provider.(Routable).Static(path, dir)
+}

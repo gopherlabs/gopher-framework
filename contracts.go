@@ -56,6 +56,7 @@ type Routable interface {
 	Vars(r *http.Request) map[string]string
 	Var(r *http.Request, param string) string
 	Use(fn MiddlewareHandler, args ...interface{})
+	Static(path string, dir string)
 }
 
 type Mappable interface {

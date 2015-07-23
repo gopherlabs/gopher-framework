@@ -2,11 +2,9 @@ package framework
 
 var defaultConfig = Config{
 	ROUTER: ConfigRouter{
-		Port: 3000,
-		Host: "0.0.0.0",
-		StaticDirs: map[string]string{
-			"static": "./static/",
-		},
+		Port:       3000,
+		Host:       "0.0.0.0",
+		StaticDirs: map[string]string{},
 	},
 	LOGGER: ConfigLogger{
 		FullTimestamp: true,
