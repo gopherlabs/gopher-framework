@@ -4,6 +4,9 @@ var defaultConfig = Config{
 	ROUTER: ConfigRouter{
 		Port: 3000,
 		Host: "0.0.0.0",
+		StaticDirs: map[string]string{
+			"static": "./static/",
+		},
 	},
 	LOGGER: ConfigLogger{
 		FullTimestamp: true,
@@ -17,8 +20,9 @@ var defaultConfig = Config{
 type Config map[string]interface{}
 
 type ConfigRouter struct {
-	Port int
-	Host string
+	Port       int
+	Host       string
+	StaticDirs map[string]string
 }
 
 type ConfigLogger struct {
