@@ -35,14 +35,41 @@ func NewContainer(config ...map[string]interface{}) *Container {
 
 func (container *Container) applyConfig(in Config) {
 	if in[LOGGER] != nil {
-		c.config[LOGGER] = ConfigLogger(in[LOGGER].(ConfigLogger))
+		c.config[LOGGER] = applyConfigLogger(in)
 	}
 	if in[ROUTER] != nil {
-		c.config[ROUTER] = ConfigRouter(in[ROUTER].(ConfigRouter))
+		c.config[ROUTER] = applyConfigRouter(in)
 	}
 	if in[RENDERER] != nil {
 		c.config[RENDERER] = ConfigRenderer(in[RENDERER].(ConfigRenderer))
 	}
+}
+
+func applyConfigLogger(in Config) ConfigLogger {
+	logger := c.config[LOGGER].(ConfigLogger)
+	newLogger := ConfigLogger(in[LOGGER].(ConfigLogger))
+	if newLogger.FullTimestamp != false {
+		logger.FullTimestamp = newLogger.FullTimestamp
+	}
+	if newLogger.LogLevel != 0 {
+		logger.LogLevel = newLogger.LogLevel
+	}
+	return logger
+}
+
+func applyConfigRouter(in Config) ConfigRouter {
+	router := c.config[ROUTER].(ConfigRouter)
+	newRouter := ConfigRouter(in[ROUTER].(ConfigRouter))
+	if newRouter.Host != "" {
+		router.Host = newRouter.Host
+	}
+	if newRouter.Port != 0 {
+		router.Port = newRouter.Port
+	}
+	if newRouter.StaticDirs != nil {
+		router.StaticDirs = newRouter.StaticDirs
+	}
+	return router
 }
 
 func (container *Container) RegisterProvider(provider interface{}) {
