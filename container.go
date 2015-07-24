@@ -1,6 +1,9 @@
 package framework
 
-import "strconv"
+import (
+	"os"
+	"strconv"
+)
 
 const (
 	LOGGER   = "LOGGER"
@@ -30,7 +33,22 @@ func NewContainer(config ...map[string]interface{}) *Container {
 	if len(config) > 0 {
 		c.applyConfig(config[0])
 	}
+	c.setConfigFromEnv("PORT")
+	c.setConfigFromEnv("HOST")
 	return c
+}
+
+func (container *Container) setConfigFromEnv(env string) {
+	if os.Getenv(env) != "" {
+		router := c.config[ROUTER].(ConfigRouter)
+		switch env {
+		case "PORT":
+			router.Port, _ = strconv.Atoi(os.Getenv(env))
+		case "HOST":
+			router.Host = os.Getenv(env)
+		}
+		c.config[ROUTER] = router
+	}
 }
 
 func (container *Container) applyConfig(in Config) {
