@@ -84,6 +84,10 @@ func showLoadingHeader() {
 }
 
 func (container *Container) showBanner(port int) {
+	portInfo := ""
+	if port > 0 {
+		portInfo = `ON PORT ` + strconv.Itoa(port)
+	}
 	c.Log.Info(`|----------------------------------------|`)
 	c.Log.Info(`|    _____                                `)
 	c.Log.Info(`|   / ____|           | |                 `)
@@ -94,6 +98,6 @@ func (container *Container) showBanner(port int) {
 	c.Log.Info(`|               | |                       `)
 	c.Log.Info(`|               |_|                       `)
 	c.Log.Info(`|----------------------------------------|`)
-	c.Log.Info(`| GOPHER READY FOR ACTION ON PORT ` + strconv.Itoa(port))
+	c.Log.Info(`| GOPHER READY FOR ACTION ` + portInfo)
 	c.Log.Info(`|----------------------------------------|`)
 }

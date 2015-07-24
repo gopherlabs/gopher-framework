@@ -121,9 +121,14 @@ func (r *RouteFacade) Var(req *http.Request, name string) string {
 	return r.provider.(Routable).Var(req, name)
 }
 
-func (r *RouteFacade) Serve() {
+func (r *RouteFacade) GetHttpHandler() http.Handler {
+	c.showBanner(0)
+	return r.provider.(Servable).GetHttpHandler()
+}
+
+func (r *RouteFacade) ListenAndServe() {
 	c.showBanner(c.config[ROUTER].(ConfigRouter).Port)
-	r.provider.(Servable).Serve()
+	r.provider.(Servable).ListenAndServe()
 }
 
 // Middleware

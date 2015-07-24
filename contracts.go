@@ -13,7 +13,8 @@ type Providerable interface {
 
 type Servable interface {
 	http.Handler
-	Serve()
+	GetHttpHandler() http.Handler
+	ListenAndServe()
 }
 
 type Subroutable interface {
