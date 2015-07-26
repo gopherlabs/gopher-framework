@@ -66,8 +66,8 @@ func (container *Container) applyConfig(in Config) {
 func applyConfigLogger(in Config) ConfigLogger {
 	logger := c.config[LOGGER].(ConfigLogger)
 	newLogger := ConfigLogger(in[LOGGER].(ConfigLogger))
-	if newLogger.FullTimestamp != false {
-		logger.FullTimestamp = newLogger.FullTimestamp
+	if newLogger.TimestampFormat != "" {
+		logger.TimestampFormat = newLogger.TimestampFormat
 	}
 	if newLogger.LogLevel != 0 {
 		logger.LogLevel = newLogger.LogLevel

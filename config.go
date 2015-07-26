@@ -1,5 +1,7 @@
 package framework
 
+import "time"
+
 var defaultConfig = Config{
 	ROUTER: ConfigRouter{
 		Port:       3000,
@@ -7,8 +9,8 @@ var defaultConfig = Config{
 		StaticDirs: map[string]string{},
 	},
 	LOGGER: ConfigLogger{
-		FullTimestamp: true,
-		LogLevel:      uint8(InfoLevel),
+		TimestampFormat: time.RFC3339,
+		LogLevel:        uint8(InfoLevel),
 	},
 	RENDERER: ConfigRenderer{
 		ViewsDir: "views",
@@ -24,8 +26,8 @@ type ConfigRouter struct {
 }
 
 type ConfigLogger struct {
-	FullTimestamp bool
-	LogLevel      uint8
+	TimestampFormat string
+	LogLevel        uint8
 }
 
 type ConfigRenderer struct {
