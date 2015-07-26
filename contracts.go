@@ -60,6 +60,17 @@ type Routable interface {
 	Static(path string, dir string)
 }
 
+type Contextable interface {
+	Set(r *http.Request, key, val interface{})
+	Get(r *http.Request, key interface{}) interface{}
+	GetOk(r *http.Request, key interface{}) (interface{}, bool)
+	GetAll(r *http.Request) map[interface{}]interface{}
+	GetAllOk(r *http.Request) (map[interface{}]interface{}, bool)
+	Delete(r *http.Request, key interface{})
+	Clear(r *http.Request)
+	Purge(maxAge int) int
+}
+
 type Mappable interface {
 	Get(key string) interface{}
 	Has(key string) bool

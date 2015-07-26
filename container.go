@@ -10,6 +10,7 @@ const (
 	ROUTER   = "ROUTER"
 	RENDERER = "RENDERER"
 	MAPPER   = "MAPPER"
+	CONTEXT  = "CONTEXT"
 )
 
 var c *Container
