@@ -9,7 +9,6 @@ const (
 	LOGGER   = "LOGGER"
 	ROUTER   = "ROUTER"
 	RENDERER = "RENDERER"
-	MAPPER   = "MAPPER"
 	CONTEXT  = "CONTEXT"
 )
 
@@ -23,7 +22,7 @@ type Container struct {
 	Log         Loggable
 	Route       Routable
 	RouteGroup  Routegroupable
-	Context     Mappable
+	Context     Contextable
 	Render      Renderable
 }
 
@@ -103,8 +102,8 @@ func (container *Container) RegisterProvider(provider interface{}) {
 		if Initialized == false {
 			showLoadingHeader()
 		}
-	case MAPPER:
-		container.Context = provider.(Providerable).Register(c, config).(Mappable)
+	case CONTEXT:
+		container.Context = provider.(Providerable).Register(c, config).(Contextable)
 	case RENDERER:
 		container.Render = provider.(Providerable).Register(c, config).(Renderable)
 	case ROUTER:
