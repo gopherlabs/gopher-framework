@@ -70,10 +70,3 @@ type Contextable interface {
 	Clear(r *http.Request)
 	Purge(maxAge int) int
 }
-
-type Mappable interface {
-	Get(key string) interface{}
-	Has(key string) bool
-	Set(key string, value interface{})
-	Remove(key string)
-}
