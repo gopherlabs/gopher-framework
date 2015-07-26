@@ -63,6 +63,7 @@ type Routable interface {
 type Contextable interface {
 	Set(r *http.Request, key, val interface{})
 	Get(r *http.Request, key interface{}) interface{}
+	Has(r *http.Request, key interface{}) bool
 	GetOk(r *http.Request, key interface{}) (interface{}, bool)
 	GetAll(r *http.Request) map[interface{}]interface{}
 	GetAllOk(r *http.Request) (map[interface{}]interface{}, bool)
